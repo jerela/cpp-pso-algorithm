@@ -1,0 +1,20 @@
+#include <iostream>
+#include <FeedforwardNeuralNetwork.h>
+
+int main()
+{
+    // prepare input for ANN
+    std::vector<double> input{ 1, 2.5, 0, -1, -2.5 };
+    // construct feedforward artificial neural network with {number_of_inputs, hidden_layer_1_nodes, ..., hidden_layer_n_nodes, output_layer_nodes}
+    ffann::FeedforwardNeuralNetwork network({(unsigned int)input.size(), 3, 2});
+    // set activation function in some layers, or they are identity by default
+    network.setActivationFunction(1, ffann::ActivationFunction::HyperbolicTangent);
+    // evaluate the input through the network to obtain output
+    std::vector<double> result = network.evaluate(input);
+    // print some results
+    for (unsigned int i = 0; i < result.size(); ++i)
+        std::cout << "Input results in " << result[i] << std::endl;
+    // print info abotu the ANN
+    network.printInfo();
+
+}

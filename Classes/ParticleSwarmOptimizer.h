@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <Particle.h>
 
 namespace pso {
 
@@ -36,7 +37,7 @@ namespace pso {
 	private:
 		unsigned int numParticles_ = 1;
 		unsigned int dimension_ = 1;
-		std::vector<ffann::PSOParticle> particles_(numParticles_);
+		std::vector<pso::Particle> particles_(numParticles_);
 		std::vector<double> collectiveLowestErrorPosition_(dimension_);
 		double collectiveLowestError_ = update();
 	};
