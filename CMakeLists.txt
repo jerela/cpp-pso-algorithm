@@ -1,0 +1,32 @@
+cmake_minimum_required(VERSION 3.10)
+
+# set the project name and version
+project(ParticleSwarmOptimization VERSION 0.1)
+
+# specify the C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+
+# add a definition that can be called as a variable in C++
+#add_definitions(-DDELSYS-TESTING_ROOT_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
+
+#configure_file(OpenSimLiveConfig.h.in OpenSimLiveConfig.h)
+
+# find path to classes folder
+set(INCLUDE_CLASSES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Classes" CACHE PATH "Path to classes")
+set(PSO_SOURCES "main.cpp" "${INCLUDE_CLASSES_PATH}/ParticleSwarmOptimizer.h"
+	"${INCLUDE_CLASSES_PATH}/Particle.h")
+
+
+
+# add executable for C++ files
+add_executable(test
+			"${PSO_SOURCES}")
+
+# link MT SDK libraries
+#target_link_libraries(test
+#						PRIVATE "ws2_32.lib") # winsock2 required for socket communication
+
+target_include_directories(test PRIVATE
+						"${INCLUDE_CLASSES_PATH}")
