@@ -9,9 +9,11 @@ namespace pso {
 	class Particle {
 
 	public:
-		Particle(unsigned int dim) {
-			
 
+		// constructor
+		Particle(size_t dim, int lb, int ub) {
+			
+			// set dimension of particle
 			dimension_ = dim;
 
 			currentPosition_ = std::vector<double>(dimension_);
@@ -19,10 +21,11 @@ namespace pso {
 			lowestErrorPosition_ = std::vector<double>(dimension_);
 
 
-			int range = 100;
+			// generate random starting position in the given search space and initialize other vectors to 0
+			int range = ub - lb;
 			std::cout << "Initialized particle at ";
 			for (unsigned int i = 0; i < dim; ++i) {
-				currentPosition_[i] = ((double)(rand() % (range+1)) - ((double)range/2));
+				currentPosition_[i] = ((double)(rand() % (range+1)) + lb);
 				std::cout << currentPosition_[i] << " ";
 				velocity_[i] = 0;
 				lowestErrorPosition_[i] = 0;
@@ -33,12 +36,16 @@ namespace pso {
 		};
 		//~Particle();
 
+		// gets the position of lowest error so far for this particle
 		std::vector<double> getLowestErrorPosition() { return lowestErrorPosition_; }
 
+		// gets the current position for this particle
 		std::vector<double> getPosition() { return currentPosition_; }
 
+		// updates the particle's velocity and current position
 		double update(std::vector<double> collectiveLowestErrorPosition, double targetValue, std::vector<double> input) {
 
+			// generate random factors for velocity changes
 			double randomFactorIndividual = ((double)(rand() % 101) / 100);
 			double randomFactorCollective = ((double)(rand() % 101) / 100);
 
@@ -68,13 +75,13 @@ namespace pso {
 		double a = 0.4;
 		double b = 0.3;
 		double c = 0.3;
-		unsigned int dimension_ = 1;
+		size_t dimension_ = 1;
 		std::vector<double> lowestErrorPosition_;
 		double lowestError_ = INFINITY;
 		std::vector<double> velocity_;;
 		std::vector<double> currentPosition_;;
-
-
+		
+		// calculate error
 		double evaluate(double targetValue, std::vector<double> input) {
 			double result = 0;
 			for (unsigned int i = 0; i < input.size(); ++i) {

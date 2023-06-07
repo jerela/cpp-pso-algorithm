@@ -12,17 +12,27 @@ namespace pso {
 		//ParticleSwarmOptimizer();
 		//~ParticleSwarmOptimizer();
 
+		// sets the dimension of particles
 		void setDimension(size_t dim) { dimension_ = dim; }
+		// sets the number of particles
 		void setNumParticles(unsigned int n) { numParticles_ = n; }
+		// sets the upper and lower bounds of the search space
+		void setBounds(int lb, int ub) {
+			lowerBound_ = lb;
+			upperBound_ = ub;
+		}
+
+		// initializes all particles
 		void initialize() {
 			for (unsigned int i = 0; i < numParticles_; ++i) {
-				particles_.push_back(pso::Particle(dimension_));
+				particles_.push_back(pso::Particle(dimension_,lowerBound_,upperBound_));
 			}
 			collectiveLowestErrorPosition_ = std::vector<double>(dimension_);
 		}
 
-		void setInput(std::vector<double> input) { input_ = input; }
-		void setTargetValue(double target) { targetValue_ = target; }
+		// sets the input data
+		void setInput(std::vector<double> input) { input_ = input; } // ALTERNATIVE: GIVE INPUT AS PARAMETER IN UPDATE()
+		void setTargetValue(double target) { targetValue_ = target; } // ALTERNATIVE: GIVE TARGET VALUE AS PARAMETER IN UPDATE()
 
 		// run a single iteration where each particle is updated
 		void update() {
@@ -48,18 +58,21 @@ namespace pso {
 
 		}
 
+		// gets the position of the global lowest error
 		std::vector<double> getLowestErrorPosition() {
 			return collectiveLowestErrorPosition_;
 		}
 
 	private:
+		int upperBound_ = 0;
+		int lowerBound_ = 0;
 		unsigned int numParticles_ = 1;
-		unsigned int dimension_ = 1;
+		size_t dimension_ = 1;
 		std::vector<double> input_;
 		double targetValue_ = 0;
 		std::vector<pso::Particle> particles_;
 		std::vector<double> collectiveLowestErrorPosition_;
-		double collectiveLowestError_ = INFINITY;// = update();
+		double collectiveLowestError_ = INFINITY;
 
 
 
