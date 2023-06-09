@@ -23,15 +23,18 @@ namespace pso {
 
 			// generate random starting position in the given search space and initialize other vectors to 0
 			int range = ub - lb;
-			std::cout << "Initialized particle at ";
+			if (verbose_)
+				std::cout << "Initialized particle at ";
 			for (unsigned int i = 0; i < dim; ++i) {
 				currentPosition_[i] = ((double)(rand() % (range+1)) + lb);
-				std::cout << currentPosition_[i] << " ";
+				if (verbose_)
+					std::cout << currentPosition_[i] << " ";
 				velocity_[i] = 0;
 				lowestErrorPosition_[i] = 0;
 
 			}
-			std::cout << std::endl;
+			if (verbose_)
+				std::cout << std::endl;
 
 		};
 		//~Particle();
@@ -53,7 +56,7 @@ namespace pso {
 			// update each dimension of direction
 			for (unsigned int i = 0; i < velocity_.size(); ++i) {
 				// update velocity
-				velocity_[i] = a * velocity_[i] + b * randomFactorIndividual * (lowestErrorPosition_[i] - currentPosition_[i]) + c * randomFactorCollective * (collectiveLowestErrorPosition[i] - currentPosition_[i]);
+				velocity_[i] = a_ * velocity_[i] + b_ * randomFactorIndividual * (lowestErrorPosition_[i] - currentPosition_[i]) + c_ * randomFactorCollective * (collectiveLowestErrorPosition[i] - currentPosition_[i]);
 
 				// update position
 				currentPosition_[i] = currentPosition_[i] + velocity_[i];
@@ -72,9 +75,10 @@ namespace pso {
 		}
 
 	private:
-		double a = 0.4;
-		double b = 0.3;
-		double c = 0.3;
+		bool verbose_ = false; // whether to print information to console
+		double a_ = 0.4;
+		double b_ = 0.3;
+		double c_ = 0.3;
 		size_t dimension_ = 1;
 		std::vector<double> lowestErrorPosition_;
 		double lowestError_ = INFINITY;
@@ -89,12 +93,15 @@ namespace pso {
 			}
 
 			double error = abs(result - targetValue);
-			std::cout << "POS: ";
-			for (unsigned int i = 0; i < input.size(); ++i) {
-				std::cout << currentPosition_[i] << " ";
+			
+			if (verbose_) {
+				std::cout << "POSITION: ";
+				for (unsigned int i = 0; i < input.size(); ++i) {
+					std::cout << currentPosition_[i] << " ";
+				}
+				std::cout << "ERROR: " << error << std::endl;
 			}
-			std::cout << "ERROR: " << error << std::endl;
-
+			
 			return error;
 		}
 	};

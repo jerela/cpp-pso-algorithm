@@ -30,12 +30,9 @@ namespace pso {
 			collectiveLowestErrorPosition_ = std::vector<double>(dimension_);
 		}
 
-		// sets the input data
-		void setInput(std::vector<double> input) { input_ = input; } // ALTERNATIVE: GIVE INPUT AS PARAMETER IN UPDATE()
-		void setTargetValue(double target) { targetValue_ = target; } // ALTERNATIVE: GIVE TARGET VALUE AS PARAMETER IN UPDATE()
 
 		// run a single iteration where each particle is updated
-		void update() {
+		void update(std::vector<double> input, double targetValue) {
 
 			// prepare a vector of errors for each particle
 			std::vector<double> errors(particles_.size());
@@ -43,7 +40,7 @@ namespace pso {
 			// update each particle
 			for (unsigned int i = 0; i < particles_.size(); ++i) {
 				// update a single particle
-				errors[i] = particles_[i].update(collectiveLowestErrorPosition_, targetValue_, input_);
+				errors[i] = particles_[i].update(collectiveLowestErrorPosition_, targetValue, input);
 			}
 
 			// update collective lowest error
@@ -53,8 +50,6 @@ namespace pso {
 					collectiveLowestErrorPosition_ = particles_[i].getPosition();
 				}
 			}
-
-
 
 		}
 
@@ -68,8 +63,6 @@ namespace pso {
 		int lowerBound_ = 0;
 		unsigned int numParticles_ = 1;
 		size_t dimension_ = 1;
-		std::vector<double> input_;
-		double targetValue_ = 0;
 		std::vector<pso::Particle> particles_;
 		std::vector<double> collectiveLowestErrorPosition_;
 		double collectiveLowestError_ = INFINITY;

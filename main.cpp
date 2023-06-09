@@ -36,9 +36,6 @@ int main(int argc, char *argv[])
 	PSO.setBounds(lowerBound, upperBound);
 	PSO.initialize();
 
-	PSO.setInput(input);
-	PSO.setTargetValue(target);
-	
 	// initialize error to inf
 	double err = INFINITY;
 
@@ -53,7 +50,7 @@ int main(int argc, char *argv[])
 	while (err > threshold) {
 
 		// update particle positions
-		PSO.update();
+		PSO.update(input, target);
 
 		// get estimated parameters as the position corresponding to global lowest error
 		std::vector<double> params_estimated = PSO.getLowestErrorPosition();
