@@ -4,78 +4,159 @@
 #include <time.h>
 #include <string>
 
-int main(int argc, char *argv[])
-{
+#include <algorithm>
+#include <random>
 
-	// parse cmd line arguments
-	unsigned int nParticles = std::stoi(argv[1]); // number of particles to use
-	int lowerBound = std::stoi(argv[2]); // lower bound of search space
-	int upperBound = std::stoi(argv[3]); // upper bound of search space
-
-	// Initialize RNG
-	srand(time(NULL));
-
-	// determine inputs and true parameters
-	std::vector<double> input = { 1, 2, 3, 4, 20 }; // TODO: read from file
-	std::vector<double> params_true = { 2, -3, 6, 22, -15 };
-	// calculate target values from input and ground turth params (TODO: read from file)
-	double target = 0;
-	for (unsigned int i = 0; i < input.size(); ++i) {
-		target += params_true[i] * input[i];
+template <class anyType>
+void printVector(std::vector<anyType> vec, std::string label) {
+	std::cout << label << ": ";
+	for (unsigned int i = 0; i < vec.size(); ++i) {
+		std::cout << vec[i];
+		if (i < vec.size() - 1) {
+			std::cout << ", ";
+		}
 	}
+	std::cout << std::endl;
+}
+
+std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, std::vector<double> targets, size_t dim, unsigned int lowerBound = -100, unsigned int upperBound = 100, unsigned int nParticles = 200, unsigned int maxEpochs = 10000, double threshold = 1e-5, unsigned int neighbourhoods = 10) {
+
+	auto rng = std::default_random_engine{};
+
+	std::vector<size_t> indices;
+	for (unsigned int i = 0; i < inputs.size(); ++i) {
+		indices.push_back(i);
+	}
+
+	size_t nSamples = targets.size();
 
 	// construct a PSO object
 	pso::ParticleSwarmOptimizer PSO;
 
 	// dimension of particles is the number of parameters
-	auto dim = params_true.size();
-	
+	size_t inputSize = inputs[0].size();
+
 	// set values for PSO
 	PSO.setDimension(dim);
 	PSO.setNumParticles(nParticles);
 	PSO.setBounds(lowerBound, upperBound);
+	PSO.setNeighbourhoods(neighbourhoods);
 	PSO.initialize();
 
-	// initialize error to inf
-	double err = INFINITY;
-
-	// if error is below this threshold, iterations stop
-	double threshold = 1e-5;
-
-	// if this number of iterations have passed, iterations stop
-	unsigned int maxEpochs = 100;
 	unsigned int epoch = 1;
 
-	// loop while error is above a threshold or maximum number of iterations have not passed
-	while (err > threshold) {
+	std::vector<double> estimatedParams;
 
-		// update particle positions
-		PSO.update(input, target);
+	double bestError = INFINITY;
+	std::vector<double> bestParams;
+
+	double err = 0;
+
+	// for each epoch
+	for (unsigned int currentEpoch = 0; currentEpoch < maxEpochs; ++currentEpoch) {
+
+		// shuffle indices so that data samples are picked in a random order when updating particles
+		std::shuffle(std::begin(indices), std::end(indices), rng);
+
+		// initialize the error sum of all data samples to 0
+		err = 0;
+	
+		// calculate error over all inputs and targets at once
+
+		// iterate through all data samples to update parameters
+		for (unsigned int i = 0; i < inputs.size(); ++i) {
+			std::vector<double> currentInput = inputs[indices[i]];
+			double currentTarget = targets[indices[i]];
+			PSO.update(currentInput, currentTarget);
+		}
 
 		// get estimated parameters as the position corresponding to global lowest error
-		std::vector<double> params_estimated = PSO.getLowestErrorPosition();
-		std::cout << "Parameters:" << std::endl;
-		for (unsigned int i = 0; i < params_estimated.size(); ++i) {
-			std::cout << params_estimated[i] << std::endl;
+		estimatedParams = PSO.getLowestErrorPosition();
+			
+		// iterate through all data samples to calculate error in target value
+		for (unsigned int i = 0; i < inputs.size(); ++i) {
+			std::vector<double> currentInput = inputs[indices[i]];
+			double currentTarget = targets[indices[i]];
+				
+
+			// calculate an estimate of the output value to calculate error
+			double estimatedTarget = 0;
+			for (unsigned int j = 0; j < inputSize; ++j) {
+				estimatedTarget += estimatedParams[j] * currentInput[j];
+			}
+
+			err += abs(currentTarget - estimatedTarget);
 
 		}
+		err = err / inputs.size();
 
-		// calculate an estimate of the output value to calculate error
-		double estimate = 0;
-		for (unsigned int i = 0; i < input.size(); ++i) {
-			estimate += params_estimated[i] * input[i];
+		std::cout << "Epoch " << currentEpoch << ", mean error over all inputs: " << err << std::endl;
+
+		if (err < bestError) {
+			bestError = err;
+			bestParams = estimatedParams;
 		}
-		std::cout << "Target value: " << target << ", current value: " << estimate << std::endl;
-
-		err = abs(target - estimate);
-
-		std::cout << std::endl;
 
 		epoch += 1;
-		if (epoch > maxEpochs){
+		if (epoch > maxEpochs) {
 			break;
 		}
+
+		if (err < threshold) {
+			break;
+
+		}
+
+	} // end iteration through epochs
+
+	std::cout << "Best mean error: " << bestError << std::endl;
+	printVector(bestParams, "Best parameters considering mean error");
+
+	std::cout << "Final error: " << err << std::endl;
 	
+
+	return estimatedParams;
+}
+
+
+int main()
+{
+
+	// Initialize RNG
+	srand((unsigned int)time(NULL));
+
+	// determine inputs and true parameters
+
+	std::vector<std::vector<double>> inputs;
+	std::vector<double> targets;
+
+	// Generate some inputs
+	inputs.push_back(std::vector<double>{5, 1});
+	inputs.push_back(std::vector<double>{5, 5});
+	inputs.push_back(std::vector<double>{7, 23});
+	inputs.push_back(std::vector<double>{8, 5});
+	for (unsigned int i = 0; i < 100; ++i) {
+		inputs.push_back(std::vector<double>{((double)(rand() % (((5+5) * 1000 + 1))) / 1000 + 5), ((double)(rand() % (((5 + 5) * 1000 + 1))) / 1000 + 5)});
 	}
+
+	// Define the parameters we are trying to estimate
+	std::vector<double> params_true = { 2, 3 };
+
+	// calculate target values from input and ground truth params (TODO: read from file)
+	// iterate through all data samples
+	for (unsigned int i = 0; i < inputs.size(); ++i) {
+		double currentTarget = 0;
+		std::vector<double> currentInput = inputs[i];
+		// iterate through all elements in the current sample
+		for (unsigned int j = 0; j < currentInput.size(); ++j) {
+			currentTarget += params_true[j] * currentInput[j];
+		}
+		targets.push_back(currentTarget);
+		
+	}
+
+	std::vector<double> params = estimateParameters(inputs, targets, params_true.size());
+	printVector(params, "Parameters");
+	printVector(targets, "Targets");
 
 }
