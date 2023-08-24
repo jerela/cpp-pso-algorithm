@@ -53,7 +53,7 @@ void ParticleSwarmOptimizer::update(std::vector<double> input, double targetValu
 
 	
 
-	std::cout << "[" << particles_[0].getPosition()[0] << ", " << particles_[0].getPosition()[1] << "], [" << particles_[1].getPosition()[0] << ", " << particles_[1].getPosition()[1] << "]" << std::endl;;
+	//std::cout << "[" << particles_[0].getPosition()[0] << ", " << particles_[0].getPosition()[1] << "], [" << particles_[1].getPosition()[0] << ", " << particles_[1].getPosition()[1] << "]" << std::endl;;
 
 
 
