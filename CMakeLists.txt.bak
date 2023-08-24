@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 # set the project name and version
-project(FeedforwardNetwork VERSION 0.1)
+project(ParticleSwarmOptimization VERSION 0.1)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 11)
@@ -15,18 +15,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # find path to classes folder
 set(INCLUDE_CLASSES_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Classes" CACHE PATH "Path to classes")
-set(FEEDFORWARDNETWORK_SOURCES "main.cpp" "${INCLUDE_CLASSES_PATH}/Node.h"
-	"${INCLUDE_CLASSES_PATH}/Node.cpp"
-	"${INCLUDE_CLASSES_PATH}/Layer.h"
-	"${INCLUDE_CLASSES_PATH}/Layer.cpp"
-	"${INCLUDE_CLASSES_PATH}/FeedforwardNeuralNetwork.h"
-	"${INCLUDE_CLASSES_PATH}/FeedforwardNeuralNetwork.cpp")
+set(PSO_SOURCES "main.cpp" "${INCLUDE_CLASSES_PATH}/ParticleSwarmOptimizer.h"
+	"${INCLUDE_CLASSES_PATH}/ParticleSwarmOptimizer.cpp"
+	"${INCLUDE_CLASSES_PATH}/Particle.h")
 
 
 
 # add executable for C++ files
 add_executable(test
-			"${FEEDFORWARDNETWORK_SOURCES}")
+			"${PSO_SOURCES}")
 
 # link MT SDK libraries
 #target_link_libraries(test

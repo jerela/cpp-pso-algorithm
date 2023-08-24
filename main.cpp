@@ -19,7 +19,7 @@ void printVector(std::vector<anyType> vec, std::string label) {
 	std::cout << std::endl;
 }
 
-std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, std::vector<double> targets, size_t dim, unsigned int lowerBound = -100, unsigned int upperBound = 100, unsigned int nParticles = 200, unsigned int maxEpochs = 10000, double threshold = 1e-5, unsigned int neighbourhoods = 10) {
+std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, std::vector<double> targets, size_t dim, double lowerBound = -100, double upperBound = 100, unsigned int nParticles = 200, unsigned int maxEpochs = 1000, double threshold = 1e-5) {
 
 	auto rng = std::default_random_engine{};
 
@@ -40,7 +40,6 @@ std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, 
 	PSO.setDimension(dim);
 	PSO.setNumParticles(nParticles);
 	PSO.setBounds(lowerBound, upperBound);
-	PSO.setNeighbourhoods(neighbourhoods);
 	PSO.initialize();
 
 	unsigned int epoch = 1;
@@ -69,6 +68,7 @@ std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, 
 			double currentTarget = targets[indices[i]];
 			PSO.update(currentInput, currentTarget);
 		}
+		//PSO.updateMultiple(inputs, targets);
 
 		// get estimated parameters as the position corresponding to global lowest error
 		estimatedParams = PSO.getLowestErrorPosition();
@@ -113,9 +113,9 @@ std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, 
 	printVector(bestParams, "Best parameters considering mean error");
 
 	std::cout << "Final error: " << err << std::endl;
-	
+	printVector(estimatedParams, "Final params: ");
 
-	return estimatedParams;
+	return bestParams;
 }
 
 
