@@ -12,6 +12,17 @@ namespace pso {
 		//ParticleSwarmOptimizer();
 		//~ParticleSwarmOptimizer();
 
+		void optimizeParameters(const std::vector<std::vector<double>>& inputs, const std::vector<double>& targets, size_t dim, double lowerBound = -100, double upperBound = 100, unsigned int nParticles = 200, unsigned int maxEpochs = 1000, double threshold = 1e-5);
+
+
+		void setInputs(std::vector<std::vector<double>> inputs) { inputs_ = inputs; }
+		void setTargets(std::vector<double> targets) { targets_ = targets; }
+		
+
+	private:
+
+
+
 		// sets the dimension of particles
 		void setDimension(size_t dim) { dimension_ = dim; }
 		// sets the number of particles
@@ -26,28 +37,28 @@ namespace pso {
 		void initialize();
 
 		// run a single iteration where each particle is updated
-		void update(std::vector<double> input, double targetValue);
+		void update(const std::vector<double>& input, const double targetValue);
 		void updateMultiple(std::vector<std::vector<double>> inputs, std::vector<double> targetValues);
 
 		// gets the position of the global lowest error
-		std::vector<double> getLowestErrorPosition();
+		const std::vector<double> getLowestErrorPosition();
 
-	private:
+
 		// upper bound of search space
 		double upperBound_ = 0;
 		// lower bound of search space
 		double lowerBound_ = 0;
 		// number of particles
-		unsigned int numParticles_ = 1;
+		unsigned int numParticles_ = 0;
 		// dimension of particles
 		size_t dimension_ = 1;
 		std::vector<pso::Particle> particles_;
-		// position of lowest error particle per neighbourhood
-		std::vector<std::vector<double>> neighbourhoodLowestErrorPosition_;
-		// lowest error per neighbourhood
-		std::vector<double> neighbourhoodLowestError_;
 
 		int neighboursPerSide_ = 0;
+
+		std::vector<std::vector<double>> inputs_;
+		std::vector<double> targets_;
+		size_t nParameters_ = 0;
 
 	};
 

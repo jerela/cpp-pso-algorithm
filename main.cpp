@@ -19,7 +19,7 @@ void printVector(std::vector<anyType> vec, std::string label) {
 	std::cout << std::endl;
 }
 
-std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, std::vector<double> targets, size_t dim, double lowerBound = -100, double upperBound = 100, unsigned int nParticles = 200, unsigned int maxEpochs = 1000, double threshold = 1e-5) {
+/*std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, std::vector<double> targets, size_t dim, double lowerBound = -100, double upperBound = 100, unsigned int nParticles = 200, unsigned int maxEpochs = 1000, double threshold = 1e-5) {
 
 	auto rng = std::default_random_engine{};
 
@@ -116,7 +116,7 @@ std::vector<double> estimateParameters(std::vector<std::vector<double>> inputs, 
 	printVector(estimatedParams, "Final params: ");
 
 	return bestParams;
-}
+}*/
 
 
 int main()
@@ -155,8 +155,11 @@ int main()
 		
 	}
 
-	std::vector<double> params = estimateParameters(inputs, targets, params_true.size());
-	printVector(params, "Parameters");
+	// construct a PSO object
+	pso::ParticleSwarmOptimizer PSO;
+	//PSO.setInputs(inputs);
+	//PSO.setTargets(targets);
+	PSO.optimizeParameters(inputs, targets, params_true.size());
 	printVector(targets, "Targets");
 
 }
