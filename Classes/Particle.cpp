@@ -93,11 +93,14 @@ double Particle::update(const double targetValue, const std::vector<double>& inp
 
 // calculate error
 double Particle::evaluate(const double targetValue, const std::vector<double>& input) {
+	
+	// first calculate estimated target values
 	double result = 0;
 	for (unsigned int i = 0; i < input.size(); ++i) {
 		result += currentPosition_[i] * input[i];
 	}
 
+	// compare the estimated target values to real target values to quantify error
 	double error = abs(result - targetValue);
 
 	if (verbose_) {

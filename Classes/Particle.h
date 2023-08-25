@@ -22,20 +22,22 @@ namespace pso {
 		// gets the position of lowest error so far for this particle
 		std::vector<double> getLowestErrorPosition() { return lowestErrorPosition_; }
 
+		// gets the position of the lowest error in this particle's neighbourhood
 		std::vector<double> getNeighbourhoodLowestErrorPosition() { return neighbourhoodLowestErrorPosition_; }
 
+		// gets the lowest error in this particle's neighbourhood
 		double getNeighbourhoodLowestError() { return neighbourhoodLowestError_; }
-		void setNeighbourhoodLowestErrorPosition(std::vector<double> position) { neighbourhoodLowestErrorPosition_ = position; }
-		void setNeighbourhoodLowestError(double error) { neighbourhoodLowestError_ = error; }
+
+		// sets the position of the lowest error in this particle's neighbourhood
+		void setNeighbourhoodLowestErrorPosition(const std::vector<double>& position) { neighbourhoodLowestErrorPosition_ = position; }
+		// sets the lowest error in this particle's neighbourhood
+		void setNeighbourhoodLowestError(const double error) { neighbourhoodLowestError_ = error; }
 
 		// gets the current position for this particle
 		std::vector<double> getPosition() { return currentPosition_; }
 
 		// updates the particle's velocity and current position
 		double update(const double targetValue, const std::vector<double>& input);
-
-		double updateMultiple(std::vector<double> collectiveLowestErrorPosition, std::vector<double> targetValues, std::vector<std::vector<double>> inputs);
-
 
 	private:
 		// whether to print information to console
@@ -62,7 +64,6 @@ namespace pso {
 		unsigned int updatesSinceMinimum_ = 0;
 		// calculate error
 		double evaluate(const double targetValue, const std::vector<double>& input);
-		double evaluateMultiple(std::vector<double> targetValues, std::vector<std::vector<double>> inputs);
 
 		// generate random numbers between lb and ub
 		double generateRandomNumber(int lb, int ub);

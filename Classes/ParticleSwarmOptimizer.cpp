@@ -3,14 +3,6 @@
 
 using namespace pso;
 
-
-
-
-
-
-
-
-
 template <class anyType>
 void printVector(std::vector<anyType> vec, std::string label) {
 	std::cout << label << ": ";
@@ -22,18 +14,6 @@ void printVector(std::vector<anyType> vec, std::string label) {
 	}
 	std::cout << std::endl;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 void ParticleSwarmOptimizer::optimizeParameters(const std::vector<std::vector<double>>& inputs, const std::vector<double>& targets, size_t dim, double lowerBound, double upperBound, unsigned int nParticles, unsigned int maxEpochs, double threshold) {
@@ -83,7 +63,6 @@ void ParticleSwarmOptimizer::optimizeParameters(const std::vector<std::vector<do
 			double currentTarget = targets[indices[i]];
 			update(currentInput, currentTarget);
 		}
-		//PSO.updateMultiple(inputs, targets);
 
 		// get estimated parameters as the position corresponding to global lowest error
 		estimatedParams = getLowestErrorPosition();
@@ -105,16 +84,12 @@ void ParticleSwarmOptimizer::optimizeParameters(const std::vector<std::vector<do
 		}
 		err = err / inputs.size();
 
-		std::cout << "Epoch " << currentEpoch << ", mean error over all inputs: " << err << std::endl;
+		
 
 		if (err < bestError) {
 			bestError = err;
 			bestParams = estimatedParams;
-		}
-
-		epoch += 1;
-		if (epoch > maxEpochs) {
-			break;
+			std::cout << "Epoch " << currentEpoch << ", mean error over all inputs: " << err << std::endl;
 		}
 
 		if (err < threshold) {
@@ -135,31 +110,6 @@ void ParticleSwarmOptimizer::optimizeParameters(const std::vector<std::vector<do
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // initializes all particles
 void ParticleSwarmOptimizer::initialize() {
 	for (unsigned int i = 0; i < numParticles_; ++i) {
@@ -174,8 +124,6 @@ void ParticleSwarmOptimizer::initialize() {
 
 // run a single iteration where each particle is updated
 void ParticleSwarmOptimizer::update(const std::vector<double>& input, const double targetValue) {
-
-
 
 	// prepare a vector of errors for each particle
 	std::vector<double> errors(numParticles_);
@@ -206,30 +154,20 @@ void ParticleSwarmOptimizer::update(const std::vector<double>& input, const doub
 
 	}
 
-	
-
 	//std::cout << "[" << particles_[0].getPosition()[0] << ", " << particles_[0].getPosition()[1] << "], [" << particles_[1].getPosition()[0] << ", " << particles_[1].getPosition()[1] << "]" << std::endl;;
-
-
 
 }
 
 
 // gets the position of the global lowest error
-const std::vector<double> ParticleSwarmOptimizer::getLowestErrorPosition() {
+std::vector<double> ParticleSwarmOptimizer::getLowestErrorPosition() {
 	std::vector<double> lowestErrorPosition(2,0);
 	double error = INFINITY;
-	/*for (unsigned int i = 0; i < particles_.size(); ++i) {
-		if (particles_[i].getNeighbourhoodLowestError() < error) {
-			error = particles_[i].getNeighbourhoodLowestError();
-			lowestErrorPosition = particles_[i].getNeighbourhoodLowestErrorPosition();
-			//std::cout << "Neighbourhood " << i << "/" << particles_.size() << " error: " << error << std::endl;
 
-		}
-	}*/
 	for (auto it = particles_.begin(); it < particles_.end(); ++it) {
-		if (it->getNeighbourhoodLowestError() < error) {
-			error = it->getNeighbourhoodLowestError();
+		double neighbourhoodLowestError = it->getNeighbourhoodLowestError();
+		if (neighbourhoodLowestError < error) {
+			error = neighbourhoodLowestError;
 			lowestErrorPosition = it->getNeighbourhoodLowestErrorPosition();
 		}
 	}

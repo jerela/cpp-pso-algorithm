@@ -12,17 +12,10 @@ namespace pso {
 		//ParticleSwarmOptimizer();
 		//~ParticleSwarmOptimizer();
 
+		// launch the optimization algorithm
 		void optimizeParameters(const std::vector<std::vector<double>>& inputs, const std::vector<double>& targets, size_t dim, double lowerBound = -100, double upperBound = 100, unsigned int nParticles = 200, unsigned int maxEpochs = 1000, double threshold = 1e-5);
-
-
-		void setInputs(std::vector<std::vector<double>> inputs) { inputs_ = inputs; }
-		void setTargets(std::vector<double> targets) { targets_ = targets; }
 		
-
 	private:
-
-
-
 		// sets the dimension of particles
 		void setDimension(size_t dim) { dimension_ = dim; }
 		// sets the number of particles
@@ -38,11 +31,9 @@ namespace pso {
 
 		// run a single iteration where each particle is updated
 		void update(const std::vector<double>& input, const double targetValue);
-		void updateMultiple(std::vector<std::vector<double>> inputs, std::vector<double> targetValues);
 
 		// gets the position of the global lowest error
-		const std::vector<double> getLowestErrorPosition();
-
+		std::vector<double> getLowestErrorPosition();
 
 		// upper bound of search space
 		double upperBound_ = 0;
@@ -52,13 +43,12 @@ namespace pso {
 		unsigned int numParticles_ = 0;
 		// dimension of particles
 		size_t dimension_ = 1;
+		// container for particles
 		std::vector<pso::Particle> particles_;
 
+		// how many neighbours a particle should have on each side (social ring neighbours configuration)
 		int neighboursPerSide_ = 0;
 
-		std::vector<std::vector<double>> inputs_;
-		std::vector<double> targets_;
-		size_t nParameters_ = 0;
 
 	};
 
