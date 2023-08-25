@@ -9,7 +9,7 @@
 - [License](#license)
 <!-- toc -->
 
-##Introduction
+## Introduction
 
 This is a C++ implementation of the particle swarm optimization algorithm to estimate optimum parameters for various problems.
 Instead of all particles being aware of each other, this algorithm uses a ring-shaped social neighbourhood. Each particle has a neighbourhood comprising one tenth of all particles. Geometrical distance doesn't matter, so particles in a neighbourhood can be (but most likely won't be) far from one another.
