@@ -21,6 +21,8 @@ The algorithm itself is in two classes:
 - ParticleSwarmOptimizer
 - Particle
 
+Written as a hobby project after getting inspiration from the book "Bio-inspired Artificial Intelligence: theories, methods, and technologies" by Dario Floreano and Claudio Mattiussi.
+
 ## Getting started
 **main.cpp** contains a working example.
 
