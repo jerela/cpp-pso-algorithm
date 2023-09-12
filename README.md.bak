@@ -41,9 +41,9 @@ The user shouldn't worry about the interface of this class, as the ParticleSwarm
 
 The ParticleSwarmOptimizer class handles communication with Particle objects and interface with the user.
 
-It has only one public function, **optimizeParameters**, which takes all the necessary data to run the particle swarm optimization algorithm.
+It has only one public function, *optimizeParameters*, which takes all the necessary data to run the particle swarm optimization algorithm.
 
-**void optimizeParameters**(const std::vector<std::vector<double>>& *inputs*, const std::vector<double>& *targets*, size_t *dim*, double *lowerBound = -100*, double *upperBound = 100*, unsigned int *nParticles = 200*, unsigned int *maxEpochs = 1000*, double *threshold = 1e-5*)
+*void optimizeParameters*(const std::vector<std::vector<double>>& *inputs*, const std::vector<double>& *targets*, size_t *dim*, double *lowerBound = -100*, double *upperBound = 100*, unsigned int *nParticles = 200*, unsigned int *maxEpochs = 1000*, double *threshold = 1e-5*)
 - *inputs*: control input data
 - *targets*: observed data
 - *dim*: dimension of particles in the swarm (the number of parameters to solve)
